@@ -138,6 +138,7 @@ a {
     font-weight: bold;
     z-index: 3000;
     margin-bottom: 4px;
+    color:white;
 }
 
 /* Profile dropdown wrapper */
@@ -152,11 +153,11 @@ a {
     border: none;
     font-size: 28px;
     cursor: pointer;
-    color: #333;
+    color: #ececec;
 }
 
 .profile-icon:hover {
-    color: #555;
+    color: #ffffff;
 }
 
 /* Dropdown menu (hidden by default) */
