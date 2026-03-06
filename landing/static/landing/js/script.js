@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const headerElement = document.querySelector(".main-header");
+    const syncMobileMenuOffset = () => {
+        if (!headerElement) return;
+        document.documentElement.style.setProperty("--header-height", `${headerElement.offsetHeight}px`);
+    };
+    syncMobileMenuOffset();
 
     /* -----------------------------------------------------
        🧭 0. Banner Carousels
@@ -41,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         window.addEventListener("resize", () => {
+            syncMobileMenuOffset();
             if (window.innerWidth > 768) {
                 mobileMenu?.classList.remove("active");
             }

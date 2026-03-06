@@ -364,12 +364,12 @@
 
   .mobile-menu {
     position: fixed;
-    top: 0;
+    top: var(--header-height, 84px);
     right: -100%;
     left: auto;
     width: 50%;
     max-width: 300px;
-    height: 100%;
+    height: calc(100dvh - var(--header-height, 84px));
     background: #1f2023;
     flex-direction: column;
     padding: 20px;
@@ -518,10 +518,13 @@
     .mobile-menu {
       display: flex;
       right: -100%;
-      height: max-content;
+      top: var(--header-height, 84px);
+      height: auto;
+      max-height: calc(100dvh - var(--header-height, 84px));
       border-radius: 8px;
       box-shadow: #555 0px 0px 20px;
-      margin-top: 10px;
+      margin-top: 0;
+      overflow-y: auto;
     }
 
     .mobile-menu.active {
