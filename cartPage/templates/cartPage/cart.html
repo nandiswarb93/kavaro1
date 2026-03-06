@@ -1,0 +1,403 @@
+{% extends 'landing/base.html' %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+
+
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Cart Items</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'cartPage/css/cart.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- JS -->
+    <script src="{% static 'cartPage/js/updatecart.js' %}" defer></script>
+
+    <style>
+        .warning {
+            color: #ff4d4f;
+            font-weight: 600;
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: #fff1f0;
+            border-left: 3px solid #ff4d4f;
+            border-radius: 4px;
+            display: none !important;
+            font-size: 14px;
+        }
+
+        .warning.show {
+            display: block !important;
+        }
+        .disabled {
+            color: gray;
+            pointer-events: none;
+        }
+
+        /* ===============================
+           CART ITEM
+        ================================ */
+        .cart-item {
+            padding: 12px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        /* ===============================
+           NON-COD ITEM INDICATOR
+        ================================ */
+        .cod-unavailable-badge {
+            display: inline-block;
+            color: rgb(0, 0, 0);
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* ===============================
+           COD TOOLTIP (ANIMATED)
+        ================================ */
+        #cod-tooltip {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transform: translateY(-6px);
+            transition: all 0.3s ease;
+            background: #fff1f0;
+            color: #ff4d4f;
+            font-size: 13px;
+            padding: 0;
+            border: 1px solid #ffccc7;
+            border-radius: 6px;
+            margin-top: 0;
+            margin-bottom: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #cod-tooltip.show {
+            opacity: 1;
+            height: auto;
+            transform: translateY(0);
+            padding: 8px 12px;
+            margin-top: 8px;
+            border-left: 3px solid #ff4d4f;
+        }
+
+
+        .empty-cart-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .wishlist-preview {
+            display: flex;
+            justify-content: center;   /* center based on item count */
+            align-items: center;
+            gap: 16px;
+            margin-top: 12px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;         /* ❌ no wrapping → single line */
+        }
+
+        /* Wishlist card */
+        .wishlist-card {
+            width: 160px;
+            height: 160px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f9fafb;
+            flex-shrink: 0;            /* prevent shrinking */
+        }
+
+        .wishlist-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-cart-div.empty-cart-layout {
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+
+        .main-cart-div.empty-cart-layout .empty-cart-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Mobile fix */
+        @media (max-width: 768px) {
+            .main-cart-div {
+                grid-template-columns: 1fr !important;
+                padding: 0 12px;
+            }
+            .wishlist-card {
+                width: 110px;
+                height: 110px;
+            }
+
+            .wishlist-preview {
+                gap: 12px;
+            }
+
+            .cod-unavailable-badge {
+                font-size: 11px;
+                padding: 3px 6px;
+            }
+
+            .warning {
+                font-size: 13px;
+                margin-top: 10px;
+                padding: 8px 10px;
+            }
+
+            #cod-tooltip {
+                font-size: 12px;
+            }
+
+            #cod-tooltip.show {
+                padding: 6px 10px;
+                margin-top: 6px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 480px) {
+            .warning {
+                font-size: 12px;
+            }
+
+            .cod-unavailable-badge {
+                font-size: 10px;
+                padding: 2px 5px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    <div class="main-cart-div {% if not cart_items %}empty-cart-layout{% endif %}">
+            <!-- CART ITEMS SECTION -->
+            <div class="cart-items-div cart-layout" {% if not cart_items %}style="display: none;"{% endif %}>
+                <div class="cart-header">
+                    <h1 style="text-align:center;">Cart Items</h1>
+                </div>
+
+                <!-- Select All Button -->
+                <div class="select-all-container">
+                    <input type="checkbox" id="select-all" checked>
+                    <label for="select-all">Select All</label>
+                </div>
+
+                <!-- Cart Items -->
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <div class="cart-item-select">
+                        <input type="checkbox" class="item-checkbox select-item" id="item-{{ item.id }}" data-id="{{ item.id }}" data-cod="{{ item.is_available_for_cod|yesno:'true,false' }}" checked>
+                    </div>
+                    <a href="#"><img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-image"></a>
+                    <div class="cart-item-details">
+                        <div class="cart-item-left">
+                            <div class="cart-item-name">{{ item.name }}</div>
+                            <div class="cart-item-price"><span>Price:</span> ₹{{ item.price }}</div>
+                            <div class="cart-item-color"><span>Color:</span> {{ item.color }}</div>
+                            <div class="cart-item-size"><span>Size:</span> {{ item.size }}</div>
+                            {% if not item.is_available_for_cod %}
+                            <div class="cod-unavailable-badge">❌ COD Not Available</div>
+                            {% endif %}
+                        </div>
+                        <div class="cart-item-right">
+                            <div class="cart-item-quantity">
+                                <span>Quantity:</span>
+                                <button class="qty-btn decrease" data-id="{{ item.id }}">-</button>
+                                <span class="quantity-value" id="qty-{{ item.id }}">{{ item.quantity }}</span>
+                                <button class="qty-btn increase"
+                                        data-id="{{ item.id }}"
+                                        data-stock="{{ item.stock }}"
+                                        {% if item.quantity >= item.stock %}disabled{% endif %}>
+                                    +
+                                </button>
+                            </div>
+                            <div class="cart-item-subtotal" id="subtotal-{{ item.id }}">
+                                ₹{{ item.subtotal|floatformat:2 }}
+                            </div>
+                            <div class="tax"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- CART SUMMARY SECTION -->
+            <div class="cart-summary-div cart-layout" {% if not cart_items %}style="display: none;"{% endif %}>
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+
+                <!-- DELIVERY ADDRESS -->
+            <div class="address">
+            <div class="delivery_address_heading">
+                <p><strong>Delivery Address:</strong></p>
+                <div class="add-address-link">
+                    {% if addresses|length < 15 %}
+                        <a href="{% url 'address:add_address' %}" style="color: rgb(2, 83, 149);">Add Address</a>
+                    {% else %}
+                        <a href="#" class="disabled" style="color: rgb(97, 97, 97);">Add Address (limit reached)</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        {% if addresses %}
+            <div class="address-dropdown">
+                <label for="selected_address" class="address-label">Select your delivery address:</label>
+                <div class="custom-select-wrapper">
+                    <div id="selected_address" class="custom-select">
+                        <span class="selected-option">
+                            {% if default_address %}
+                                <strong>{{ default_address.fullname }}</strong><br>
+                                {{ default_address.address1 }}{% if default_address.address2 %}, {{ default_address.address2 }}{% endif %}<br>
+                                {{ default_address.city }}, {{ default_address.state }}, {{ default_address.country }} - {{ default_address.pincode }}<br>
+                                {{ default_address.mobile }}
+                                <em>(Default)</em>
+                            {% endif %}
+                        </span>
+
+
+                        <div class="options">
+                            {% for addr in addresses %}
+                            <div class="option" data-id="{{ addr.id }}">
+                                <strong>{{ addr.fullname }}</strong><br>
+                                {{ addr.address1 }}{% if addr.address2 %}, {{ addr.address2 }}{% endif %}<br>
+                                {{ addr.city }}, {{ addr.state }}, {{ addr.country }} - {{ addr.pincode }}<br>
+                                {{ addr.mobile }}
+                                {% if addr.is_default %}<em> (Default)</em>{% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <input type="hidden" name="selected_address" id="selected_address_input" value="{% for addr in addresses %}{% if addr.is_default %}{{ addr.id }}{% endif %}{% endfor %}">
+                </div>
+            </div>
+            {% else %}
+            <p>No delivery address found. Please add an Address.</p>
+            {% endif %}
+
+
+        </div>
+
+
+                <!-- TOTALS -->
+                <div class="totals">
+                <p><span class="label">Total Items:</span> <span class="value" id="total-items">{{ total_items }}</span></p>
+                <p><span class="label">Sub Total:</span> <span class="value" id="total-price">₹{{ total_price }}</span></p>
+                <!-- Hidden meta data for JS -->
+                <input type="hidden" id="tax-rate" value="{{ taxes_and_charges.tax }}">
+                <input type="hidden" id="delivery-charge-base" value="{{ taxes_and_charges.delivery_charges }}">
+
+                <p><span class="label">Taxes:</span> <span class="value" id="taxes">₹{{ taxes|floatformat:2 }}</span></p>
+                <p><span class="label">Delivery Charges:</span> <span class="value" id="delivery-charge">₹{{ delivery_charge|floatformat:2 }}</span></p>
+                <hr>
+                <p class="grand-total"><span class="label">Grand Total:</span> <span class="value" id="grand-total">₹{{ grand_total|floatformat:2 }}</span></p>
+
+                <input type="hidden" id="min-amount-for-free-delivery" value="{{ min_amount_for_free_delivery|floatformat:2 }}">
+
+                <hr>
+                <!-- PAYMENT METHOD -->
+                <div class="payment-method">
+                    <p><strong>Payment Method:</strong></p>
+                    <label>
+                    <input type="radio" name="payment_method" value="cod" id="payment-cod"
+                            {% if payment_method == 'cod' %}checked{% endif %}>
+                    Cash on Delivery
+                    </label>
+
+                    <br>
+                    <label>
+                        <input type="radio" name="payment_method" value="online"
+                            {% if payment_method == 'online' or not payment_method %}checked{% endif %}>
+                        Prepaid / Online Payment
+                    </label>
+                </div>
+                <!-- COD TOOLTIP -->
+                <div id="cod-tooltip"></div>
+                <p id="warning-message" class="warning"></p>
+                <button id="checkout-button" class="checkout-button">Place Order</button>
+            </div>
+        </div>
+            </div>
+
+            <!-- ================= EMPTY CART ================= -->
+
+            <div id="empty-cart-layout" class="empty-cart-container" {% if cart_items %}style="display:none"{% endif %}>
+                <h2>Your cart is empty 🛒</h2>
+                <p>Looks like you haven’t added anything yet.</p>
+
+                {% if wishlist_items %}
+                    <h3>From your wishlist ❤️</h3>
+
+                    <div class="wishlist-preview">
+                        {% for w in wishlist_items|slice:":3" %}
+
+                            <div class="wishlist-card">
+                                <img src="{{ w.product.image_url }}" alt="{{ w.product.name }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                    <a href="{% url 'wishlist_view' %}" class="checkout-button">
+                        Go to Wishlist
+                    </a>
+
+                {% else %}
+                    <p>Your wishlist is also empty.</p>
+                    <a href="{% url 'home' %}" class="checkout-button">
+                        Go to Home
+                    </a>
+                {% endif %}
+            </div>
+
+    </div>
+
+<!-- ✅ KEEP ONLY ADDRESS DROPDOWN JS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const select = document.getElementById("selected_address");
+    if (!select) return;
+
+    const selected = select.querySelector(".selected-option");
+    const options = select.querySelector(".options");
+    const hiddenInput = document.getElementById("selected_address_input");
+
+    selected.addEventListener("click", () => {
+        options.style.display = options.style.display === "block" ? "none" : "block";
+    });
+
+    options.querySelectorAll(".option").forEach(opt => {
+        opt.addEventListener("click", () => {
+            selected.innerHTML = opt.innerHTML;
+            hiddenInput.value = opt.dataset.id;
+            options.style.display = "none";
+        });
+    });
+});
+</script>
+</body>
+</html>
+{% endblock %}

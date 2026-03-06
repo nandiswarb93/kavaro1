@@ -1,0 +1,25 @@
+<h2>Return Details</h2>
+
+<p>Order: {{ rr.order.order_code }}</p>
+<p>Item: {{ rr.order_item.product.name }}</p>
+<p>Status: {{ rr.status }}</p>
+
+{% if rr.status == "received" %}
+    <!-- STEP 5 BUTTON -->
+    <button onclick="refundReturn({{ rr.id }})">
+        Refund Amount
+    </button>
+{% endif %}
+
+<script>
+function refundReturn(id){
+    fetch(`/orders/returns/${id}/refund/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+    })
+    .then(r => r.json())
+    .then(d => alert(d.message));
+}
+</script>

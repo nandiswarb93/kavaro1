@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px;">
+<div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px;">
+    <h2>{{ title }}</h2>
+
+    {% if image %}
+    <img src="{{ image }}" style="width: 100%; border-radius: 6px;">
+    {% endif %}
+
+    <p>{{ message }}</p>
+
+    <hr>
+    <p style="font-size: 12px;">
+       <!-- emails/announcement.html -->
+
+<a href="{{ unsubscribe_url }}"
+   style="display:inline-block;padding:10px 18px;
+          background:#dc3545;color:#fff;
+          text-decoration:none;border-radius:5px;">
+   Unsubscribe
+</a>
+
+</div>
+</body>
+</html>

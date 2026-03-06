@@ -1,0 +1,263 @@
+{% extends 'landing/base.html' %}
+{% block title %}Order Successful{% endblock %}
+
+{% block content %}
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+    background: #f3f4f6;
+}
+
+.order-success-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-success-card {
+    background: #fff;
+    padding: 45px 40px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+    animation: fadeScale .6s ease;
+    max-width: 650px;
+    width: 100%;
+}
+
+.success-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #f5aa09;
+    color: #fff;
+    font-size: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pop .7s ease;
+}
+
+.order-success-card h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.order-success-card p {
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+
+.order-summary {
+    text-align: left;
+    margin-top: 25px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9fafb;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.order-item img {
+    width: 70px;
+    height: 90px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.order-item-details {
+    flex: 1;
+    margin-left: 14px;
+}
+
+.order-item-details p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #111;
+}
+
+.order-price {
+    font-weight: 700;
+}
+
+.address-box {
+    margin-top: 25px;
+    background: #f9fafb;
+    padding: 18px;
+    border-radius: 14px;
+    text-align: left;
+}
+
+.success-actions a {
+    display: inline-block;
+    margin: 8px;
+    padding: 14px 26px;
+    border-radius: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-outline {
+    border: 2px solid #111;
+    color: #111;
+}
+
+.btn-primary {
+    background: #f5aa09;
+    color: #fff;
+}
+
+.dot {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #dba615ff, #f78738ff);
+    pointer-events: none;
+    animation: dotMove 4.5s ease-out forwards;
+}
+
+@keyframes fadeScale {
+    from { opacity:0; transform: scale(.85); }
+    to { opacity:1; transform: scale(1); }
+}
+
+@keyframes pop {
+    from { transform: scale(.3); }
+    to { transform: scale(1); }
+}
+
+@keyframes dotMove {
+    0% { transform: translate(0,0) scale(0.3); opacity: 0; }
+    20% { opacity: 1; }
+    70% { transform: translate(var(--x),var(--y)) scale(1); opacity: 1; }
+    100% { transform: translate(var(--x),var(--y)) scale(1.3); opacity: 0; }
+}
+</style>
+
+<div class="order-success-page">
+    <div class="order-success-card" id="successCard">
+
+        <div class="success-icon">✓</div>
+
+        <!-- 🔥 Dynamic Heading Based on Payment -->
+        {% if order.payment_method == "razorpay" %}
+            <h1>Payment Successful!</h1>
+            
+        {% else %}
+            <h1>Order Placed Successfully!</h1>
+        {% endif %}
+
+        <p>
+            Hi {{ order.user.first_name|default:order.user.username }},
+            your order has been placed successfully 🎉
+        </p>
+
+         {% if order.payment_method == "razorpay" %}
+            <p><strong>Payment Mode:</strong> Online Payment 💳</p>
+        {% else %}
+            <p><strong>Payment Mode:</strong>Cash on Delivery 💰 </p>
+        {% endif %} 
+
+        <!-- ORDER SUMMARY -->
+        <div class="order-summary">
+            {% for item in order.items.all %}
+            <div class="order-item">
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                <div class="order-item-details">
+                    <p><strong>{{ item.product.name }}</strong></p>
+                    <p>Size: {{ item.size }} | Qty: {{ item.quantity }}</p>
+                </div>
+                <div class="order-price">
+                    ₹{{ item.price|floatformat:2 }}
+                </div>
+            </div>
+            {% endfor %}
+
+        <div style="margin-top:20px; background:#f9fafb; padding:18px; border-radius:12px;">
+    
+    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Subtotal</span>
+        <span>₹{{ order.total_amount|floatformat:2 }}</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Tax (5%)</span>
+        <span>₹{{ order.tax_amount|floatformat:2 }}</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Delivery Charges</span>
+        <span>₹{{ order.delivery_charges|floatformat:2 }}</span>
+    </div>
+
+    <hr style="margin:10px 0;">
+
+    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:16px;">
+        <span>Grand Total</span>
+        <span>₹{{ order.grand_total|floatformat:2 }}</span>
+    </div>
+
+</div>
+        </div>
+
+        <!-- ADDRESS -->
+        {% if order.address %}
+        <div class="address-box">
+            <p><strong>{{ order.address.fullname }}</strong></p>
+            <p>{{ order.address.address1 }}, {{ order.address.city }}</p>
+            <p>{{ order.address.state }} - {{ order.address.pincode }}</p>
+            <p>📞 {{ order.address.mobile }}</p>
+        </div>
+        {% endif %}
+
+        <div class="success-actions">
+            
+            <a href="{% url 'order_history' %}" class="btn-outline">
+            View Orders
+            </a>
+
+            <a href="{% url 'product_list' %}" class="btn-primary">
+                Continue Shopping
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const card = document.getElementById("successCard");
+
+window.onload = () => {
+    setTimeout(dots, 400);
+};
+
+function dots(){
+    for(let i=0;i<30;i++){
+        const d = document.createElement("div");
+        d.className = "dot";
+        const size = Math.random()*10+10;
+        d.style.width = size+"px";
+        d.style.height = size+"px";
+        d.style.left = "50%";
+        d.style.top = "50%";
+        d.style.setProperty("--x",(Math.random()-0.5)*260+"px");
+        d.style.setProperty("--y",(Math.random()-0.5)*260+"px");
+        card.appendChild(d);
+        setTimeout(()=>d.remove(),3400);
+    }
+}
+</script>
+
+{% endblock %}

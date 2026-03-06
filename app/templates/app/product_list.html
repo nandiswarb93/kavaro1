@@ -1,0 +1,210 @@
+{% extends 'landing/base.html' %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #f4f4f5;
+    --card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #6b7280;
+    --accent: #111827;
+    --border: #e5e7eb;
+    --shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+* {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ===== PAGE ===== */
+.shop-page {
+    background: var(--bg);
+    padding: 28px 16px 50px;
+}
+
+.shop-container {
+    max-width: 1320px;
+    margin: auto;
+}
+
+/* ===== HEADER ===== */
+.shop-header {
+    margin-bottom: 26px;
+}
+
+.shop-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.shop-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* ===== GRID ===== */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+}
+
+/* ===== CARD ===== */
+.product-card {
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+}
+
+/* ===== IMAGE ===== */
+.product-image-wrapper {
+    overflow: hidden;
+    background: #fafafa;
+}
+
+.product-image {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.06);
+}
+
+/* ===== INFO ===== */
+.product-info {
+    padding: 14px 16px 18px;
+}
+
+.product-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.4;
+    margin-bottom: 6px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.currency {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.amount {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ===== CTA ===== */
+.view-btn {
+    margin-top: 14px;
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.view-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-image {
+        height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .product-image {
+        height: 220px;
+    }
+
+    .product-name {
+        font-size: 0.8rem;
+    }
+
+    .amount {
+        font-size: 1rem;
+    }
+}
+</style>
+
+<div class="shop-page">
+    <div class="shop-container">
+
+        <div class="shop-header">
+            <div class="shop-title">Shop Products</div>
+            <div class="shop-subtitle">Curated essentials designed for everyday use</div>
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}">
+                    <div class="product-image-wrapper">
+                        <img src="{{ product.image_url }}"
+                             alt="{{ product.name }}"
+                             class="product-image">
+                    </div>
+                </a>
+
+                <div class="product-info">
+                    <div class="product-name">{{ product.name }}</div>
+
+                    <div class="product-price">
+                        <span class="currency">₹</span>
+                        <span class="amount">{{ product.price }}</span>
+                    </div>
+
+                    <a href="{% url 'product_detail' product.id %}">
+                        <button class="view-btn">View Product</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

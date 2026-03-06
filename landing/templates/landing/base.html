@@ -1,0 +1,68 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Shop{% endblock %}</title>
+
+    <!-- Existing CSS -->
+    <link rel="stylesheet" href="{% static 'landing/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'landing/css/landing.css' %}">
+
+   
+    <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+
+<body class="preload">
+
+    <!-- Top Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- Blur Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="base-wrapper">
+
+        {% include 'landing/header.html' %}
+
+        <main class="base-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        {% include 'landing/footer.html' %}
+
+    </div>
+
+    <script src="{% static 'landing/js/script.js' %}"></script>
+    <script src="{% static 'js/loader.js' %}"></script>
+
+</body>
+<style>
+    html,
+    body {
+        height: 100vh;
+        margin: 0;
+    }
+
+    .base-wrapper {
+        margin-top: 100px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .base-content {
+        flex: 1;
+    }
+</style>
+
+</html>

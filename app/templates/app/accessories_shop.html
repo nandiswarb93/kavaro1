@@ -1,0 +1,171 @@
+{% extends 'landing/base.html' %}
+{% block title %}Accessories{% endblock %}
+
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --bg: #f4f4f5;
+        --card: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #6b7280;
+        --accent: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* PAGE */
+    .type-page {
+        background: var(--bg);
+        padding: 24px 16px 60px;
+    }
+
+    .type-container {
+        max-width: 1320px;
+        margin: auto;
+    }
+
+
+    /* GRID */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+    }
+
+    /* CARD */
+    .card {
+        background: var(--card);
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow);
+    }
+
+    /* IMAGE */
+    .product-image {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        transition: transform .35s ease;
+    }
+
+    .card:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    /* INFO */
+    .info {
+        padding: 14px 16px 18px;
+    }
+
+    .product-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-main);
+        line-height: 1.4;
+        margin-bottom: 6px;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .price {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 14px;
+    }
+
+    /* ===============================
+   VIEW PRODUCT BUTTON
+================================ */
+    .view-btn {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+        text-align: center;
+        border-radius: 10px;
+        border: 1.5px solid #111;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #000;
+        transition: all 0.2s ease;
+    }
+
+    .view-btn:hover {
+        background: #111;
+        color: #fff;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+        .grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .product-image {
+            height: 280px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .product-image {
+            height: 220px;
+        }
+
+        .product-title {
+            font-size: 0.8rem;
+        }
+
+        .price {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+
+
+<div class="container">
+
+    <h2 style="margin-bottom: 20px;">Accessories</h2>
+
+    <div class="grid">
+        {% for product in products %}
+        <div class="card">
+            <a href="{% url 'product_detail' product.id %}">
+                <img src="{{ product.image_url }}" class="product-image">
+            </a>
+            <div class="info">
+                <h3 class="product-title">{{ product.name }}</h3>
+                <p class="price">₹ {{ product.price }}</p>
+                <a href="{% url 'product_detail' product.id %}" class="view-btn">
+                    View Product
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

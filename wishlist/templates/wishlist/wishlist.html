@@ -1,0 +1,322 @@
+{% extends 'landing/base.html' %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #f4f4f5;
+    --card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #6b7280;
+    --accent: #111827;
+    --border: #e5e7eb;
+    --danger: #ef4444;
+    --shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+* {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ===== PAGE ===== */
+.wishlist-page {
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 28px 16px 50px;
+}
+
+.wishlist-container {
+    max-width: 1320px;
+    margin: auto;
+}
+
+/* ===== HEADER ===== */
+.wishlist-header {
+    margin-bottom: 28px;
+}
+
+.wishlist-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.wishlist-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* ===== GRID ===== */
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+}
+
+/* ===== CARD ===== */
+.wishlist-card {
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+}
+
+/* ===== IMAGE ===== */
+.wishlist-image {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    background: #fafafa;
+}
+
+/* ===== REMOVE BUTTON ===== */
+.wishlist-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.1);
+}
+
+.heart-icon {
+    width: 22px;
+    height: 22px;
+    fill: var(--danger);
+    stroke: var(--danger);
+}
+
+/* ===== INFO ===== */
+.card-info {
+    padding: 14px 16px 18px;
+}
+
+.product-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.4;
+    margin-bottom: 6px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.currency {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ===== CTA ===== */
+.view-btn {
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.view-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state h2 {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+.browse-btn {
+    margin-top: 18px;
+    padding: 12px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.browse-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .wishlist-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .wishlist-image {
+        height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .wishlist-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .wishlist-image {
+        height: 220px;
+    }
+
+    .product-name {
+        font-size: 0.8rem;
+    }
+
+    .amount {
+        font-size: 1rem;
+    }
+}
+</style>
+
+<div class="wishlist-page">
+    <div class="wishlist-container">
+
+        <div class="wishlist-header">
+            <div class="wishlist-title">My Wishlist</div>
+            <div class="wishlist-subtitle">Items you’ve saved to revisit later</div>
+        </div>
+
+        {% if wishlist_items %}
+        <div class="wishlist-grid">
+            {% for item in wishlist_items %}
+            <div class="wishlist-card" data-id="{{ item.product.id }}">
+
+                <button class="wishlist-btn"
+                        data-id="{{ item.product.id }}"
+                        onclick="toggleWishlist(event, this)">
+                    <svg class="heart-icon" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                        2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+                        C13.09 3.81 14.76 3 16.5 3
+                        19.58 3 22 5.42 22 8.5
+                        c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+
+                <a href="{% url 'product_detail' item.product.id %}">
+                    <img src="{{ item.product.image_url }}"
+                         alt="{{ item.product.name }}"
+                         class="wishlist-image">
+                </a>
+
+                <div class="card-info">
+                    <div class="product-name">{{ item.product.name }}</div>
+
+                    <div class="product-price">
+                        <span class="currency">₹</span>
+                        <span class="amount">{{ item.product.price }}</span>
+                    </div>
+
+                    <a href="{% url 'product_detail' item.product.id %}">
+                        <button class="view-btn">View Product</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2>Your wishlist is empty</h2>
+            <p>Save products you love to keep track of them and revisit anytime.</p>
+
+            <a href="{% url 'home' %}">
+                <button class="browse-btn">Browse Products</button>
+            </a>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+function toggleWishlist(event, btn) {
+    event.preventDefault();
+    const productId = btn.dataset.id;
+
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.added === false) {
+            localStorage.setItem("wishlist_removed_" + productId, "true");
+            btn.closest('.wishlist-card').remove();
+
+            if (!document.querySelector('.wishlist-card')) {
+                location.reload();
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

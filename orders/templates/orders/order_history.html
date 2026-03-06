@@ -1,0 +1,462 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<style>
+    html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg:#f4f4f5;
+    --card:#fff;
+    --text:#0f172a;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --shadow:0 8px 24px rgba(0,0,0,.08);
+    --accent:#111827;
+}
+*{font-family:Inter,system-ui}
+
+/* PAGE */
+.orders-page{background:var(--bg);min-height:100vh;padding:24px 14px}
+.orders-container{max-width:900px;margin:auto}
+
+/* HEADER */
+.orders-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:relative;
+    margin-bottom:22px;
+}
+.orders-header h2{font-size:1.6rem;font-weight:700}
+.filter-btn{cursor:pointer;font-weight:600}
+
+/* ORDER */
+.order-group{margin-bottom:26px}
+.order-id{font-size:.8rem;color:var(--muted);margin-bottom:8px}
+
+.order-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:14px;
+    display:flex;
+    gap:14px;
+    align-items:center;
+    border:1px solid var(--border);
+    transition:.2s;
+}
+.order-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+
+.order-img{
+    width:84px;height:84px;border-radius:10px;
+    overflow:hidden;background:#eee;flex-shrink:0;
+}
+.order-img img{width:100%;height:100%;object-fit:cover}
+
+.order-info{flex:1}
+.brand-name{font-size:.75rem;color:var(--muted);font-weight:600}
+.product-name{font-size:.95rem;font-weight:600}
+.size-text,.more-items{font-size:.8rem;color:var(--muted)}
+
+.order-meta{text-align:right}
+.order-status{font-size:.8rem;font-weight:600;color:#16a34a}
+
+/* FILTER POPUP */
+.filter-popup{
+    display:none;
+    position:absolute;
+    top:44px;
+    right:0;
+    width:280px;
+    background:#fff;
+    border-radius:14px;
+    padding:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.15);
+    z-index:999;
+}
+.filter-popup.active{display:block}
+
+.accordion-header{
+    background:#f3f4f6;
+    padding:8px;
+    border-radius:8px;
+    font-size:.8rem;
+    font-weight:600;
+    cursor:pointer;
+}
+.accordion-content{display:none;margin-top:6px}
+.accordion-content.show{display:block}
+
+.radio-option{display:flex;gap:6px;font-size:.8rem;padding:6px 0}
+.date-input{width:100%;padding:6px;font-size:.8rem;margin-top:6px}
+
+.filter-actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:12px
+    left:100px
+
+}
+.apply-btn{
+    background:#111827;color:#fff;
+    padding:6px 12px;border-radius:6px;cursor:pointer
+}
+.clear-btn{
+    background:#111827;color:#fff;
+    padding:6px 12px;border-radius:6px;cursor:pointer
+}
+.view-link{
+    font-size:.8rem;
+    font-weight:600;
+    color:#2563eb;
+}
+
+
+@media (max-width: 480px) {
+
+  /* PAGE CONTAINER */
+  .orders-container {
+      margin: 60px auto;
+      padding: 10px;
+  }
+
+  /* ORDER CARD */
+  .order-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: #fff;
+      margin-bottom: 12px;
+  }
+
+  /* PRODUCT IMAGE */
+  .order-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+  }
+
+  /* ORDER INFO */
+  .order-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+  }
+
+  .order-title {
+      font-size: .9rem;
+      font-weight: 600;
+      line-height: 1.2;
+  }
+
+  .order-date {
+      font-size: .75rem;
+      color: #6b7280;
+  }
+
+  .order-price {
+      font-size: .85rem;
+      font-weight: 600;
+      color: #111827;
+  }
+
+  /* DETAILS LINK */
+  .order-meta {
+      margin-left: auto;
+  }
+
+  .view-link {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #2563eb;
+      white-space: nowrap;
+  }
+
+  /* FILTER BUTTON */
+  .filter-btn {
+      padding: 6px 12px;
+      font-size: .75rem;
+      border-radius: 999px;
+  }
+
+  /* FILTER POPUP */
+  .filter-popup {
+      width: 95%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 16px;
+  }
+
+  /* APPLY BUTTON */
+  .apply-btn {
+      font-size: .85rem;
+      padding: 10px;
+      border-radius: 12px;
+  }
+
+}
+.empty-orders{
+    text-align:center;
+    margin-top:80px;
+    color:#6b7280;
+}
+.empty-orders img{
+    width:180px;
+    margin-bottom:18px;
+}
+.empty-orders h3{
+    font-size:1.1rem;
+    font-weight:700;
+    color:#111827;
+}
+.empty-orders p{
+    font-size:.85rem;
+    margin:6px 0 16px;
+}
+.shop-btn{
+    display:inline-block;
+    padding:8px 16px;
+    background:#111827;
+    color:#fff;
+    border-radius:8px;
+    font-size:.85rem;
+    text-decoration:none;
+}
+
+.filter-section{
+    margin-bottom:14px;   /* 👈 section gap */
+}
+
+
+</style>
+
+<div class="orders-page">
+<div class="orders-container">
+
+<!-- HEADER -->
+<div class="orders-header">
+    <h2>My Orders</h2>
+    <span class="filter-btn" id="filterBtn">≡ Filter</span>
+
+    <!-- FILTER POPUP -->
+    <div class="filter-popup" id="filterPopup">
+
+        <!-- STATUS -->
+        <div class="filter-section">
+            <div class="accordion-header">Filter By Status</div>
+            <div class="accordion-content show">
+                <label class="radio-option">
+                    {% comment %} <input type="radio" name="status" value="" checked> All {% endcomment %}
+                </label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="pending">Pending</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="placed">Placed</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="processing">Processing</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="shipped">Shipped</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="out_for_delivery">Out for delivery</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="delivered">Delivered</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="cancelled">Cancelled</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="returned">Returned</label>
+            </div>
+        </div>
+
+        <!-- TIME -->
+        <div class="filter-section">
+            <div class="accordion-header">Filter By Time</div>
+            <div class="accordion-content">
+               <label class="radio-option">
+  <input type="radio" name="orderFilter" value=""> All
+</label>
+
+                <label class="radio-option"><input type="radio" name="orderFilter" value="7">Last 7 Days</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="30">Last 30 Days</label>
+                <label class="radio-option"><input type="radio" name="orderFilter" value="custom">Custom</label>
+
+                <div id="customDates" style="display:none">
+                    <input type="date" id="fromDate" class="date-input">
+                    <input type="date" id="toDate" class="date-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-actions">
+            <div class="apply-btn" onclick="applyFilters()">Apply</div>
+            <div class="clear-btn" onclick="clearFilters()">Clear</div>
+        </div>
+    </div>
+</div>
+
+<!-- ORDERS -->
+
+{% if orders|length == 0 %}
+<div class="empty-orders">
+    {% comment %} <img src="{% static 'images/empty-orders.png' %}" alt="No orders"> {% endcomment %}
+    <h3>No orders yet</h3>
+    <p>You haven’t placed any orders.</p>
+    <a href="{% url 'home' %}" class="shop-btn">Start Shopping</a>
+</div>
+{% else %}
+  {% for order in orders %}
+  <a href="{% url 'order_detail' order.order_code %}"
+     class="order-item"
+     data-status="{{ order.status }}"
+     data-date="{{ order.created_at|date:'Y-m-d' }}"
+     style="text-decoration:none;color:inherit">
+
+    <div class="order-group">
+      <div class="order-id">Order ID • {{ order.order_code }}</div>
+
+      <div class="order-card">
+        <div class="order-img">
+          <img src="{{ order.items.first.product.image_url }}">
+        </div>
+
+        <div class="order-info">
+          <div class="brand-name">UnityThreads</div>
+          <div class="product-name">{{ order.items.first.product.name }}</div>
+        </div>
+
+        <div class="order-meta">
+          <div class="view-link">View Details</div>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+{% endif %}
+
+
+
+
+
+<!-- ✅ SCRIPT MUST BE HERE -->
+
+
+<script>
+const filterBtn = document.getElementById("filterBtn");
+const popup = document.getElementById("filterPopup");
+const orders = document.querySelectorAll(".order-item");
+const customDates = document.getElementById("customDates");
+const hasOrders = orders.length > 0;
+
+/* ================= POPUP TOGGLE ================= */
+filterBtn.addEventListener("click", function (e) {
+  e.stopPropagation();
+  if (!hasOrders) return;
+  popup.classList.toggle("active");
+});
+
+/* stop popup inner clicks from closing */
+popup.addEventListener("click", function (e) {
+  e.stopPropagation();
+});
+
+/* ================= ACCORDION ================= */
+document.querySelectorAll(".accordion-header").forEach(header => {
+  header.addEventListener("click", function () {
+    const current = header.nextElementSibling;
+
+    document.querySelectorAll(".accordion-content").forEach(c => {
+      if (c !== current) c.classList.remove("show");
+    });
+
+    current.classList.toggle("show");
+  });
+});
+
+/* ================= CUSTOM DATE ================= */
+document.querySelectorAll('input[name="orderFilter"]').forEach(radio => {
+  radio.addEventListener("change", function () {
+    customDates.style.display =
+      this.value === "custom" ? "block" : "none";
+  });
+});
+
+/* ================= APPLY FILTERS ================= */
+function applyFilters() {
+
+  const selected =
+    document.querySelector('input[name="orderFilter"]:checked')?.value || "";
+
+  const from = document.getElementById("fromDate")?.value;
+  const to = document.getElementById("toDate")?.value;
+  const today = new Date();
+
+  let visibleCount = 0;
+
+  orders.forEach(o => {
+
+    let show = true;
+
+    /* STATUS */
+    if (
+      ["pending","placed","processing","shipped",
+       "out_for_delivery","delivered","cancelled","returned"]
+      .includes(selected)
+    ) {
+      show = o.dataset.status === selected;
+    }
+
+    /* TIME */
+    if (selected === "7" || selected === "30") {
+      const d = new Date(o.dataset.date);
+      show = (today - d) / 86400000 <= Number(selected);
+    }
+
+    if (selected === "custom" && from && to) {
+      const d = new Date(o.dataset.date);
+      show = d >= new Date(from) && d <= new Date(to);
+    }
+
+    o.style.display = show ? "block" : "none";
+    if (show) visibleCount++;
+  });
+
+  /* ===== NO FILTER RESULTS MESSAGE ===== */
+  let emptyBox = document.getElementById("noFilterResult");
+
+  if (!emptyBox) {
+    emptyBox = document.createElement("div");
+    emptyBox.id = "noFilterResult";
+    emptyBox.className = "empty-orders";
+    emptyBox.innerHTML = `
+      <h3>No orders here</h3>
+      <p>No orders match your selected filter.</p>
+    `;
+    document.querySelector(".orders-container").appendChild(emptyBox);
+  }
+
+  emptyBox.style.display = visibleCount === 0 ? "block" : "none";
+
+  popup.classList.remove("active");
+}
+
+/* ================= CLEAR FILTERS ================= */
+function clearFilters() {
+  document.querySelectorAll('input[name="orderFilter"]').forEach(r => r.checked = false);
+  orders.forEach(o => o.style.display = "block");
+  customDates.style.display = "none";
+
+  const emptyBox = document.getElementById("noFilterResult");
+  if (emptyBox) emptyBox.style.display = "none";
+
+  popup.classList.remove("active");
+}
+
+/* ================= CLICK OUTSIDE ================= */
+document.addEventListener("click", function () {
+  popup.classList.remove("active");
+});
+</script>
+{%endblock%}

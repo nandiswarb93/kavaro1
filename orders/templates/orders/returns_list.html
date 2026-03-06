@@ -1,0 +1,79 @@
+<h2>Return Requests</h2>
+
+<table>
+<tr>
+    <th>Order</th>
+    <th>Item</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for rr in returns %}
+<tr>
+    <td>{{ rr.order.order_code }}</td>
+    <td>{{ rr.order_item.product.name }}</td>
+    <td>{{ rr.status }}</td>
+
+    <td>
+        {% if rr.status == "requested" %}
+            <!-- STEP 2 BUTTON -->
+            <button id="approve-btn" data-return-id="{{ return.id }}">Approve</button>
+
+        {% else %}
+            —
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</table>
+<script>
+    document.querySelectorAll('.approve-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const returnId = this.dataset.returnId;
+
+        fetch(`/orders/returns/${returnId}/approve/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "Content-Type": "application/json"
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Return approved! Waybill: " + data.waybill);
+
+                // ✅ Update status in the table
+                const row = document.getElementById(`return-${returnId}`);
+                if (row) {
+                    row.querySelector('.return-status').innerText = "pickup_scheduled";
+                    // Optionally disable approve button
+                    const approveBtn = row.querySelector('.approve-btn');
+                    approveBtn.disabled = true;
+                    approveBtn.innerText = "Approved";
+                }
+            } else {
+                alert("Error: " + (data.error || "Unknown error"));
+            }
+        })
+        .catch(err => console.error(err));
+    });
+});
+
+// CSRF helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OTP Verification</title>
+</head>
+<body>
+    <button onclick="window.location.href='{{ request.META.HTTP_REFERER }}'" style="float:left; margin-bottom:10px; background:none; border:none; font-size:16px; cursor:pointer; background-color:#f3f0f0; border-radius: 6px; padding:2px;">Back</button>
+    <h2>Enter OTPs</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="email_otp" placeholder="Enter Email OTP" required>
+        <input type="text" name="mobile_otp" placeholder="Enter Mobile OTP" required>
+        <button type="submit">Verify</button>
+    </form>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</body>
+</html>

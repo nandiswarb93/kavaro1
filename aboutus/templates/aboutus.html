@@ -1,0 +1,261 @@
+{% extends "landing/base.html" %}
+{% load static %}
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+
+<!-- AOS + FontAwesome -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+/* HERO */
+.about-hero {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.about-hero h1 {
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.about-hero p {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* SECTION */
+.section {
+    padding: 50px 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    width: 100%;
+}
+
+/* GRID */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+/* CARDS */
+.card-box {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.card-box i {
+    font-size: 22px;
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.card-box h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.card-box p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* TIMELINE */
+.timeline-item {
+    margin-bottom: 25px;
+}
+
+.timeline-content {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.timeline-content h4 {
+    font-size: 14px;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.timeline-content h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.timeline-content p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* CONTACT */
+.contact-box {
+    text-align: center;
+    background: #f1f5f9;
+    padding: 40px 20px;
+    border-radius: 14px;
+}
+
+/* MOBILE FIX */
+@media (max-width: 768px) {
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .about-hero {
+        padding: 50px 15px;
+    }
+
+    .about-hero h1 {
+        font-size: 24px;
+    }
+
+    .about-hero p {
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 30px 15px;
+    }
+}
+
+/* SAFETY FIX FOR AOS WHITE SPACE ISSUE */
+[data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+}
+</style>
+
+{% if about %}
+
+<!-- HERO -->
+<section class="about-hero" data-aos="fade-up">
+    <h1>{{ about.title }}</h1>
+    <p>{{ about.subtitle }}</p>
+</section>
+
+<!-- STORY & MISSION -->
+<section class="section">
+    <div class="container grid-2">
+        <div class="card-box" data-aos="fade-up">
+            <i class="fas fa-book-open"></i>
+            <h2>Our Story</h2>
+            <p>{{ about.story }}</p>
+        </div>
+
+        <div class="card-box" data-aos="fade-up">
+            <i class="fas fa-bullseye"></i>
+            <h2>Our Mission</h2>
+            <p>{{ about.mission }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- UNIQUE & QUALITY -->
+<section class="section" style="background:#f8fafc;">
+    <div class="container grid-2">
+        <div class="card-box" data-aos="fade-up">
+            <i class="fas fa-star"></i>
+            <h2>What Makes Us Unique</h2>
+            <p>{{ about.unique_points }}</p>
+        </div>
+
+        <div class="card-box" data-aos="fade-up">
+            <i class="fas fa-gem"></i>
+            <h2>Quality Commitment</h2>
+            <p>{{ about.quality }}</p>
+        </div>
+    </div>
+</section>
+
+{% endif %}
+
+<!-- JOURNEY (Outside about condition for safety) -->
+<section class="section">
+    <div class="container">
+        <h2 style="text-align:center;margin-bottom:20px;">
+            <i class="fas fa-road"></i> Our Journey
+        </h2>
+
+        {% if timeline %}
+            {% for event in timeline %}
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>{{ event.year }}</h4>
+                    <h3>{{ event.title }}</h3>
+                    <p>{{ event.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align:center;">No events available.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% if about %}
+
+<!-- FOUNDER NOTE -->
+<section class="section" style="background:#f8fafc;">
+    <div class="container">
+        <div class="card-box" data-aos="fade-up">
+            <i class="fas fa-user-tie"></i>
+            <h2>Founder’s Note</h2>
+            <p>{{ about.founders_note }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section">
+    <div class="container">
+        <div class="contact-box" data-aos="fade-up">
+            <i class="fas fa-envelope"></i>
+            <h2>Contact Us</h2>
+            <p>We’d love to hear from you!</p>
+            {% if about.contact_email %}
+                <p>
+                    <a href="mailto:{{ about.contact_email }}">
+                        {{ about.contact_email }}
+                    </a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endif %}
+
+<script>
+AOS.init({
+    duration: 800,
+    once: true
+});
+</script>
+
+{% endblock %}

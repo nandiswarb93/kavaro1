@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        h2 {
+            color: #222;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background: #fafafa;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            background: #ff6f61;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Thank you for your order, {{ order.user.get_full_name }}!</h2>
+
+    <p>Your order <strong>#{{ order.order_code }}</strong> has been successfully placed.</p>
+
+    <h3>Order Details</h3>
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Qty</th>
+            <th>Price</th>
+        </tr>
+
+        {% for item in order.items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.price|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="3">Subtotal</td>
+           <td>₹{{ order.total_amount|floatformat:2 }}</td>
+</tr>
+        <tr>
+            <td colspan="3">Tax</td>
+            <td>₹{{ order.tax_amount|floatformat:2 }}</td>
+        </tr>
+
+        <tr>
+            <td colspan="3">Delivery Charges</td>
+            <td>₹{{ order.delivery_charges|floatformat:2 }}</td>
+        </tr>
+
+        <tr class="total-row">
+            <td colspan="3">Grand Total</td>
+            <td>₹{{ order.grand_total|floatformat:2 }}</td>
+        </tr>
+    </table>
+
+    <!-- SHOP BUTTON -->
+    <center>
+        <a href="http://127.0.0.1:8000/landing/" class="btn">
+            Shop Now
+        </a>
+    </center>
+
+    <div class="footer">
+        <p>We will notify you once your order is shipped.</p>
+        <p>Thanks,<br>MyShop Team</p>
+    </div>
+
+</div>
+
+</body>
+</html>

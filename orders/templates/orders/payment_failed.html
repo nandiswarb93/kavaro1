@@ -1,0 +1,12 @@
+<h2>❌ Payment Failed</h2>
+
+<p><strong>Order:</strong> {{ order.order_code }}</p>
+<p><strong>Reason:</strong> {{ order.payment_failure_reason }}</p>
+
+<a href="{% url 'retry_payment' order.id %}" class="btn btn-primary">
+    Retry Payment
+</a>
+
+<a href="{% url 'cartPage' %}" class="btn btn-secondary">
+    Back to Cart
+</a>

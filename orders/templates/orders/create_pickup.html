@@ -1,0 +1,10 @@
+<h2>Schedule Pickup for Return</h2>
+
+<p>Order ID: {{ return_request.order.id }}</p>
+<p>Item: {{ return_request.item.product.name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <p>Click below to schedule your return pickup.</p>
+    <button type="submit">Schedule Pickup</button>
+</form>
