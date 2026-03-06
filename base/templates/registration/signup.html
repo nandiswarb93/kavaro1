@@ -88,9 +88,9 @@
             position: relative;
         }
 
-        .password-container input {
+        /* .password-container input {
             padding-right: 40px;
-        }
+        } */
 
         .toggle-eye {
             position: absolute;
@@ -150,13 +150,13 @@
 
         <div class="password-container">
             <input type="password" name="password" id="password" placeholder="Password must be 8+ chars with atleast 1 upper,1lowercase,number&special character" required>
-            <i class="fa-regular fa-eye toggle-eye" id="eye-password" onclick="togglePassword('password','eye-password')"></i>
+            <!-- <i class="fa-regular fa-eye toggle-eye" id="eye-password" onclick="togglePassword('password','eye-password')"></i> -->
         </div>
         {% if errors.password %}<div class="error">{{ errors.password }}</div>{% endif %}
 
         <div class="password-container">
             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
-            <i class="fa-regular fa-eye toggle-eye" id="eye-confirm" onclick="togglePassword('confirm_password','eye-confirm')"></i>
+            <!-- <i class="fa-regular fa-eye toggle-eye" id="eye-confirm" onclick="togglePassword('confirm_password','eye-confirm')"></i> -->
         </div>
         {% if errors.confirm_password %}<div class="error">{{ errors.confirm_password }}</div>{% endif %}
 
