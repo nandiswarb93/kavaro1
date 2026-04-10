@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "KINE/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "KINE/wsgi.py"
+    }
+  ]
+}
