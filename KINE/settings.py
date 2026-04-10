@@ -175,14 +175,162 @@
 # DELHIVERY_RETURN_ADDRESS_ID = ""  # optional for now
 # DELHIVERY_MODE = "test"
 
+##########################################
+##dummy code
+
+# from pathlib import Path
+# import os
+# import dj_database_url
+
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+# SECRET_KEY = 'django-insecure-temp-key'
+
+# DEBUG = True
+
+# ALLOWED_HOSTS = ["*"]
+
+# # ========================
+# # INSTALLED APPS
+# # ========================
+# INSTALLED_APPS = [
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+
+#     'landing',
+#     'base',
+#     'app',
+#     'wishlist',
+#     'cartPage',
+#     'address',
+#     'rest_framework',
+#     'orders',
+#     'profile',
+#     'aboutus',
+#     'faqpage',
+#     'terms_co',
+#     'emailapp',
+# ]
+
+# # ========================
+# # MIDDLEWARE
+# # ========================
+# MIDDLEWARE = [
+#     'django.middleware.security.SecurityMiddleware',
+#     'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ added
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# ]
+
+# ROOT_URLCONF = 'KINE.urls'
+
+# # ========================
+# # TEMPLATES
+# # ========================
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+
+# WSGI_APPLICATION = 'KINE.wsgi.application'
+
+# # ========================
+# # DATABASE (SAFE VERSION)
+# # ========================
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+#     )
+# }
+
+# # ========================
+# # PASSWORD VALIDATION
+# # ========================
+# AUTH_PASSWORD_VALIDATORS = [
+#     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+#     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+# ]
+
+# # ========================
+# # INTERNATIONALIZATION
+# # ========================
+# LANGUAGE_CODE = 'en-us'
+# TIME_ZONE = 'UTC'
+# USE_I18N = True
+# USE_TZ = True
+
+# LOGIN_URL = '/accounts/login/'
+
+# # ========================
+# # STATIC FILES
+# # ========================
+# STATIC_URL = 'static/'
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
+
+# STATIC_ROOT = BASE_DIR / "staticfiles"  # ✅ IMPORTANT
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# # ========================
+# # DEFAULT FIELD
+# # ========================
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# # ========================
+# # EMAIL CONFIG (HARDCODED)
+# # ========================
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "test@gmail.com"
+# EMAIL_HOST_PASSWORD = "testpassword"
+
+# # ========================
+# # API KEYS (HARDCODED)
+# # ========================
+# FAST2SMS_API_KEY = "test_key"
+
+# RAZORPAY_KEY_ID = "rzp_test_xxxxx"
+# RAZORPAY_KEY_SECRET = "test_secret"
+
+# DELHIVERY_API_TOKEN = "test_token"
+# DELHIVERY_BASE_URL = "https://track.delhivery.com"
+# DELHIVERY_PICKUP_LOCATION = "PRIMARY"
+# DELHIVERY_RETURN_ADDRESS_ID = ""
+# DELHIVERY_MODE = "test"
+
+###########################################3
 
 from pathlib import Path
 import os
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-temp-key'
+SECRET_KEY = 'django-insecure-6mcqm@%$9jn&gre2^@@6#x2kt&$pdi@kra-fw#!p@b!a%hh)kp'
 
 DEBUG = True
 
@@ -219,7 +367,7 @@ INSTALLED_APPS = [
 # ========================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ added
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ only added
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -251,12 +399,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'KINE.wsgi.application'
 
 # ========================
-# DATABASE (SAFE VERSION)
+# DATABASE (UNCHANGED SQLITE)
 # ========================
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # ========================
@@ -280,7 +429,7 @@ USE_TZ = True
 LOGIN_URL = '/accounts/login/'
 
 # ========================
-# STATIC FILES
+# STATIC FILES (FIXED)
 # ========================
 STATIC_URL = 'static/'
 
@@ -288,9 +437,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / "staticfiles"  # ✅ IMPORTANT
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / "staticfiles"  # ✅ added (important)
 
 # ========================
 # DEFAULT FIELD
@@ -298,24 +445,24 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ========================
-# EMAIL CONFIG (HARDCODED)
+# ORIGINAL EMAIL CONFIG (UNCHANGED)
 # ========================
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "test@gmail.com"
-EMAIL_HOST_PASSWORD = "testpassword"
+EMAIL_HOST_USER = "sreeja.bommana1123@gmail.com"
+EMAIL_HOST_PASSWORD = "khwojtrimrhdgmeb"
 
 # ========================
-# API KEYS (HARDCODED)
+# ORIGINAL API KEYS (UNCHANGED)
 # ========================
-FAST2SMS_API_KEY = "test_key"
+FAST2SMS_API_KEY = "Sv9MoCRq6tuT4Fla1erpJxWdIOE08LNhfbBQwnyYKiXzm5cUV2Fg7zHGLd0k4T6b5tADsjcOW1fYwBXh"
 
-RAZORPAY_KEY_ID = "rzp_test_xxxxx"
-RAZORPAY_KEY_SECRET = "test_secret"
+RAZORPAY_KEY_ID = "rzp_test_RV1zvVwry7Wo8O"
+RAZORPAY_KEY_SECRET = "9WED8m2OuuAJv8VpKGrurJ5M"
 
-DELHIVERY_API_TOKEN = "test_token"
+DELHIVERY_API_TOKEN = "5dcd6d9356c7a9bf624f1b536094f23471a00a45"
 DELHIVERY_BASE_URL = "https://track.delhivery.com"
 DELHIVERY_PICKUP_LOCATION = "PRIMARY"
 DELHIVERY_RETURN_ADDRESS_ID = ""
