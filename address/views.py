@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Address
 
+# -------   ADDRESS DETAILS --------- #
+
 @login_required
 def add_address(request):
     if request.method == "POST":
@@ -34,10 +36,14 @@ def add_address(request):
     return render(request, "orders/add_address.html")
 
 
+# -------   ADDRESS LIST --------- #
+
 @login_required
 def address_list(request):
     addresses = Address.objects.filter(user=request.user).order_by("-id")  # latest first
     return render(request, "orders/address_list.html", {"addresses": addresses})
+
+# -------   ADDRESS SELECTION IN CART-PAGE --------- #
 
 @login_required
 def select_address(request, id):
@@ -52,6 +58,8 @@ def select_address(request, id):
 
     return redirect('address:address_list')  # or your desired page
 
+
+# -------   ADDRESS MODIFICATION --------- #
 
 @login_required
 def edit_address(request, id):
@@ -72,6 +80,8 @@ def edit_address(request, id):
     
     return render(request, "orders/add_address.html", {"address": address})
 
+
+# -------   ADDRESS DELETION --------- #
 
 @login_required
 def delete_address(request, id):

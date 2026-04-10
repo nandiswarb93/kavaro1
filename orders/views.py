@@ -334,7 +334,7 @@ client = razorpay.Client(
 @login_required
 def razorpay_payment(request):
     if request.method != "POST":
-        return redirect("cartPage")
+        return redirect("cart/cart/")
 
     user = request.user
 
@@ -345,7 +345,7 @@ def razorpay_payment(request):
     selected_address_id = request.session.get("selected_address")
 
     if not selected_items or not selected_address_id:
-        return redirect("cartPage")
+        return redirect("cart/cart/")
 
     # -----------------------------
     # FETCH DATA
@@ -372,7 +372,6 @@ def razorpay_payment(request):
     tax_rate = Decimal(tax_obj.tax) if tax_obj else Decimal("0.00")
     delivery_charge = Decimal(tax_obj.delivery_charges) if tax_obj else Decimal("0.00")
     min_free_delivery = Decimal(tax_obj.min_amount_for_free_delivery) if tax_obj else Decimal("0.00")
-
     subtotal = sum(Decimal(item.price) * item.quantity for item in cart_items)
     tax_amount = (subtotal * tax_rate / Decimal("100")).quantize(Decimal("0.01"))
 

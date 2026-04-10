@@ -94,6 +94,8 @@ def accessories_shop(request):
     return render(request, "app/accessories_shop.html", context)
 
 
+# -------   LIST OF PRODUCTS  --------- #
+
 def product_list(request):
     # Fetch all products
     products = Product.objects.all()
@@ -101,7 +103,8 @@ def product_list(request):
     return render(request, 'app/product_list.html', {'products': products})
 
 
-# from cartPage.models import CartItem
+# -------   PRODUCT DETAILS  --------- #
+
 from wishlist.models import Wishlist
 from cartPage.models import CartItem
 

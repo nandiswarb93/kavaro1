@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+
 class TaxesAndCharges(models.Model):
     tax = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     delivery_charges = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)

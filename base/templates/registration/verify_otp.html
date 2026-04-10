@@ -1,19 +1,174 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OTP Verification</title>
+    <title>Verify OTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial; }
+
+        body {
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: #eee;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        h2 { margin-bottom: 10px; }
+
+        .otp-boxes {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .otp-boxes input {
+            width: 45px;
+            height: 50px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:disabled { background: gray; }
+
+        .timer {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .msg {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
-    <button onclick="window.location.href='{{ request.META.HTTP_REFERER }}'" style="float:left; margin-bottom:10px; background:none; border:none; font-size:16px; cursor:pointer; background-color:#f3f0f0; border-radius: 6px; padding:2px;">Back</button>
-    <h2>Enter OTPs</h2>
+
+<div class="card">
+
+    <button onclick="window.history.back()" class="back-btn">⬅</button>
+
+    <h2>Verify OTP</h2>
+
+    <p style="color:green;">OTP sent successfully</p>
+
+    <form method="post" onsubmit="combineOTP()">
+        {% csrf_token %}
+
+        <!-- Hidden input -->
+        <input type="hidden" name="otp" id="final_otp">
+
+        <!-- OTP Boxes -->
+        <div class="otp-boxes">
+            <input type="text" maxlength="1" oninput="moveNext(this,0)">
+            <input type="text" maxlength="1" oninput="moveNext(this,1)">
+            <input type="text" maxlength="1" oninput="moveNext(this,2)">
+            <input type="text" maxlength="1" oninput="moveNext(this,3)">
+            <input type="text" maxlength="1" oninput="moveNext(this,4)">
+            <input type="text" maxlength="1" oninput="moveNext(this,5)">
+        </div>
+
+        <button type="submit" name="verify" class="btn">Verify</button>
+    </form>
+
+    <!-- Timer -->
+    <div class="timer">
+        OTP expires in <span id="timer">60</span> sec
+    </div>
+
+    <!-- Resend -->
     <form method="post">
         {% csrf_token %}
-        <input type="text" name="email_otp" placeholder="Enter Email OTP" required>
-        <input type="text" name="mobile_otp" placeholder="Enter Mobile OTP" required>
-        <button type="submit">Verify</button>
+        <button type="submit" name="resend" id="resend-btn" class="btn" disabled>Resend OTP</button>
     </form>
+
     {% for message in messages %}
-        <p>{{ message }}</p>
+        <p class="msg">{{ message }}</p>
     {% endfor %}
+
+</div>
+
+<script>
+let inputs = document.querySelectorAll(".otp-boxes input");
+
+function moveNext(current, index) {
+    current.value = current.value.replace(/[^0-9]/g, ''); // only numbers
+
+    if (current.value.length === 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+    }
+}
+
+// Backspace support
+inputs.forEach((input, index) => {
+    input.addEventListener("keydown", function(e) {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+
+// Combine OTP
+function combineOTP() {
+    let otp = "";
+    inputs.forEach(input => otp += input.value);
+    document.getElementById("final_otp").value = otp;
+}
+
+// Timer 60 sec
+let timerEl = document.getElementById("timer");
+let resendBtn = document.getElementById("resend-btn");
+
+let timeLeft = 60;
+
+let countdown = setInterval(() => {
+    timeLeft--;
+    timerEl.innerText = timeLeft;
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        resendBtn.disabled = false;
+    }
+}, 1000);
+</script>
+
 </body>
 </html>

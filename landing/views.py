@@ -28,9 +28,7 @@ def home(request):
 def landing(request):
     categories = Category.objects.filter(is_enabled=True).order_by('order')
     return render(request, "landing/landing.html", {'categories': categories})
-# <<<<<<< HEAD
 
-# =======
 def update_username(request):
     mobile_view_user_name=getElementByClassName("user-name")
     mobile_view_user_name.innerHTML=request.user.username
@@ -53,7 +51,6 @@ def accessories(request):
 
 def shop_now(request):
     return render(request, 'cartPage/shopnow.html')
-# >>>>>>> 025ad7353ca71db9ed4fe07f4c1a9ab52b62df89
 
 def logout_page(request):
     auth.logout(request)

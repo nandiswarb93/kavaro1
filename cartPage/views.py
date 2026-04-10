@@ -29,6 +29,8 @@ from .models import CartItem, TaxesAndCharges
 from app.models import Product,Size
 from address.models import Address
 
+# -------   TAX CREDENTIALS INFO --------- #
+
 def get_tax_settings():
     taxes_and_charges = TaxesAndCharges.objects.first()
     if not taxes_and_charges:
@@ -49,6 +51,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import CartItem
 from app.models import Product, Size, ProductStock
+
+# -------   ADD TO CART LOGIC  --------- #
 
 @csrf_protect
 def add_to_cart(request):
@@ -96,6 +100,10 @@ def add_to_cart(request):
         })
 
     return JsonResponse({'success': False, 'message': 'Login required'})
+
+
+# -------   CART VIEW OR CART ITEMS --------- #
+
 
 def cart(request):
     """Render cart page for the current user."""
@@ -161,6 +169,8 @@ def cart(request):
     })
 
 
+# -------   CART CHECKOUT --------- #
+
 def checkout_view(request):
     addresses = Address.objects.filter(user=request.user)
     default_address = addresses.filter(is_default=True).first() or addresses.first()
@@ -178,6 +188,8 @@ def checkout_view(request):
         "addresses_json": addresses_json,
     })
 
+
+# -------   UPDATE CART  --------- #
 
 @require_POST
 @login_required
@@ -230,6 +242,8 @@ def update_cart(request, item_id):
         "all_items_eligible_for_cod": all_items_eligible_for_cod
     })
 
+
+# -------   CART CONFIRMATION --------- #
 
 def _cart_summary_response(user, updated_item=None, removed=False):
     settings_data = get_tax_settings()
