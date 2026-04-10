@@ -15,7 +15,7 @@ urlpatterns = [
     path('wishlist/', include('wishlist.urls')),
     path('address/', include(('address.urls', 'address'), namespace='address')),
     path('profile/', include('profile.urls')),
-    path('orders/', include('orders.urls')),
+    # path('orders/', include('orders.urls')),
     path('', include('faqpage.urls')),
     path('', include('aboutus.urls')),
     path('', include('terms_co.urls')),

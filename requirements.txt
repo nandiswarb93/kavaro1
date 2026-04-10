@@ -10,5 +10,4 @@ djangorestframework-simplejwt
 tomlkit
 Pillow
 razorpay
-xhtml2pdf
 psycopg2-binary
