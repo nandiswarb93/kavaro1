@@ -1,7 +1,6 @@
 Django==5.2.7
 gunicorn==25.1.0
 whitenoise
-psycopg2-binary
 dj-database-url
 requests
 djangorestframework
@@ -11,3 +10,5 @@ djangorestframework-simplejwt
 tomlkit
 Pillow
 razorpay
+xhtml2pdf
+psycopg2-binary
